@@ -1,15 +1,57 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, Camera, MapPin, Heart, Send, Utensils } from 'lucide-react';
+import { MessageCircle, Camera, MapPin, Heart, Send, Utensils, Star } from 'lucide-react';
 import { mockUsers, phoSpots } from '../data/mockData';
 
 const Matches = ({ currentUser }) => {
   const [selectedMatch, setSelectedMatch] = useState(null);
+  const [activeSubTab, setActiveSubTab] = useState('chats'); // 'chats' | 'history'
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState({});
+  const [ratings, setRatings] = useState(() => {
+    try {
+      const saved = localStorage.getItem(`matchRatings_${currentUser.id}`);
+      return saved ? JSON.parse(saved) : {};
+    } catch (e) {
+      return {};
+    }
+  });
 
   // Mock matches (users who liked back)
   const matches = mockUsers.filter(user => user.id !== currentUser.id).slice(0, 3);
+
+  const deriveRestaurantForMatch = (match) => {
+    const hasJourney = Array.isArray(match.phoJourney) && match.phoJourney.length > 0;
+    const journeyPick = hasJourney ? match.phoJourney[Math.floor(Math.random() * match.phoJourney.length)] : null;
+    if (journeyPick && journeyPick.restaurant) {
+      const byName = phoSpots.find(s => s.name === journeyPick.restaurant);
+      if (byName) return byName;
+    }
+    return phoSpots[Math.floor(Math.random() * phoSpots.length)];
+  };
+
+  const [pastMatches, setPastMatches] = useState([]);
+
+  useEffect(() => {
+    const uniqueById = [];
+    const seen = new Set();
+    matches.forEach(m => { if (!seen.has(m.id)) { seen.add(m.id); uniqueById.push(m); } });
+    const enriched = uniqueById.map(m => ({ match: m, restaurant: deriveRestaurantForMatch(m) }));
+    setPastMatches(enriched);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUser.id]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(`matchRatings_${currentUser.id}`, JSON.stringify(ratings));
+    } catch (e) {
+      // ignore write errors
+    }
+  }, [ratings, currentUser.id]);
+
+  const handleRate = (matchId, value) => {
+    setRatings(prev => ({ ...prev, [matchId]: value }));
+  };
 
   const sendMessage = (matchId) => {
     if (message.trim()) {
@@ -85,14 +127,51 @@ const Matches = ({ currentUser }) => {
     }));
   };
 
+  const goOnAnotherDate = (match) => {
+    setActiveSubTab('chats');
+    setSelectedMatch(match);
+    suggestPhoDate(match.id);
+  };
+
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
-      {!selectedMatch ? (
-        // Matches List
+      <div style={{ background: 'white', padding: '10px 20px', borderBottom: '1px solid #e0e0e0' }}>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button
+            onClick={() => { setActiveSubTab('chats'); }}
+            style={{
+              background: activeSubTab === 'chats' ? '#ff6b6b' : 'transparent',
+              color: activeSubTab === 'chats' ? 'white' : '#333',
+              border: '1px solid #ff6b6b',
+              borderRadius: '20px',
+              padding: '8px 14px',
+              cursor: 'pointer',
+              fontWeight: 600
+            }}
+          >
+            Chats
+          </button>
+          <button
+            onClick={() => { setSelectedMatch(null); setActiveSubTab('history'); }}
+            style={{
+              background: activeSubTab === 'history' ? '#ff6b6b' : 'transparent',
+              color: activeSubTab === 'history' ? 'white' : '#333',
+              border: '1px solid #ff6b6b',
+              borderRadius: '20px',
+              padding: '8px 14px',
+              cursor: 'pointer',
+              fontWeight: 600
+            }}
+          >
+            History
+          </button>
+        </div>
+      </div>
+
+      {activeSubTab === 'history' ? (
         <div style={{ padding: '20px', flex: 1, overflowY: 'auto' }}>
-          <h2 style={{ marginBottom: '20px', color: '#333' }}>Your Matches</h2>
-          
-          {matches.length === 0 ? (
+          <h2 style={{ marginBottom: '20px', color: '#333' }}>Match History</h2>
+          {pastMatches.length === 0 ? (
             <div style={{
               display: 'flex',
               flexDirection: 'column',
@@ -102,69 +181,183 @@ const Matches = ({ currentUser }) => {
               textAlign: 'center'
             }}>
               <Heart size={64} color="#ff6b6b" style={{ marginBottom: '20px' }} />
-              <h3 style={{ color: '#333', marginBottom: '10px' }}>No matches yet</h3>
+              <h3 style={{ color: '#333', marginBottom: '10px' }}>No previous matches</h3>
               <p style={{ color: '#666' }}>
-                Keep swiping to find your perfect pho partner!
+                Your past matches will appear here. Rate them to keep track!
               </p>
             </div>
           ) : (
             <div style={{ display: 'grid', gap: '15px' }}>
-              {matches.map((match, index) => (
+              {pastMatches.map(({ match, restaurant }, index) => (
                 <motion.div
-                  key={match.id}
+                  key={`${match.id}-${restaurant.id}`}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  onClick={() => setSelectedMatch(match)}
+                  transition={{ delay: index * 0.05 }}
                   style={{
                     background: 'white',
                     borderRadius: '15px',
-                    padding: '20px',
-                    display: 'flex',
+                    padding: '16px',
+                    display: 'grid',
+                    gridTemplateColumns: '56px 1fr auto',
                     alignItems: 'center',
-                    gap: '15px',
-                    cursor: 'pointer',
-                    boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
-                    transition: 'transform 0.2s ease'
+                    columnGap: '15px',
+                    boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
                   }}
-                  onMouseOver={(e) => e.target.style.transform = 'translateY(-2px)'}
-                  onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
                 >
                   <img
                     src={match.mainPhoto}
                     alt={match.name}
                     style={{
-                      width: '60px',
-                      height: '60px',
+                      width: '56px',
+                      height: '56px',
                       borderRadius: '50%',
                       objectFit: 'cover'
                     }}
                   />
                   <div style={{ flex: 1 }}>
-                    <h3 style={{ margin: '0 0 5px 0', color: '#333' }}>{match.name}</h3>
-                    <p style={{ margin: 0, color: '#666', fontSize: '14px' }}>
-                      {match.phoCompatibility}% pho compatibility
-                    </p>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '5px' }}>
-                      <div style={{
-                        background: '#4CAF50',
-                        color: 'white',
-                        padding: '2px 8px',
-                        borderRadius: '10px',
-                        fontSize: '12px'
-                      }}>
-                        {match.preferences.brothType} lover
+                    <h3 style={{ margin: '0 0 4px 0', color: '#333' }}>{match.name}</h3>
+                    <p style={{ margin: 0, color: '#666', fontSize: '13px' }}>{match.phoCompatibility}% pho compatibility · {match.preferences.brothType} lover</p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '8px' }}>
+                      <img src={restaurant.image} alt={restaurant.name} style={{ width: '36px', height: '28px', objectFit: 'cover', borderRadius: '6px' }} />
+                      <div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <MapPin size={14} color="#ff6b6b" />
+                          <strong style={{ fontSize: '13px' }}>{restaurant.name}</strong>
+                        </div>
+                        <span style={{ fontSize: '12px', color: '#777' }}>{restaurant.location}</span>
                       </div>
                     </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '8px' }}>
+                      {[1, 2, 3, 4, 5].map(star => (
+                        <button
+                          key={star}
+                          onClick={() => handleRate(match.id, star)}
+                          aria-label={`Rate ${star} star${star > 1 ? 's' : ''}`}
+                          style={{
+                            background: 'transparent',
+                            border: 'none',
+                            padding: 0,
+                            cursor: 'pointer',
+                            lineHeight: 0
+                          }}
+                        >
+                          <Star
+                            size={20}
+                            color={star <= (ratings[match.id] || 0) ? '#ffd700' : '#ccc'}
+                            fill={star <= (ratings[match.id] || 0) ? '#ffd700' : 'none'}
+                          />
+                        </button>
+                      ))}
+                      {ratings[match.id] ? (
+                        <span style={{ color: '#666', fontSize: '12px' }}>Rated {ratings[match.id]} / 5</span>
+                      ) : (
+                        <span style={{ color: '#999', fontSize: '12px' }}>Not rated</span>
+                      )}
+                    </div>
                   </div>
-                  <MessageCircle size={24} color="#ff6b6b" />
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <button
+                      onClick={() => goOnAnotherDate(match)}
+                      style={{
+                        background: '#4CAF50',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '12px',
+                        padding: '8px 12px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      <MapPin size={16} />
+                      <span style={{ fontSize: '13px', fontWeight: 600 }}>Go on another date</span>
+                    </button>
+                  </div>
                 </motion.div>
               ))}
             </div>
           )}
         </div>
       ) : (
-        // Chat Interface
+        !selectedMatch ? (
+          // Matches List (Chats tab)
+          <div style={{ padding: '20px', flex: 1, overflowY: 'auto' }}>
+            <h2 style={{ marginBottom: '20px', color: '#333' }}>Your Matches</h2>
+            {matches.length === 0 ? (
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '50vh',
+                textAlign: 'center'
+              }}>
+                <Heart size={64} color="#ff6b6b" style={{ marginBottom: '20px' }} />
+                <h3 style={{ color: '#333', marginBottom: '10px' }}>No matches yet</h3>
+                <p style={{ color: '#666' }}>
+                  Keep swiping to find your perfect pho partner!
+                </p>
+              </div>
+            ) : (
+              <div style={{ display: 'grid', gap: '15px' }}>
+                {matches.map((match, index) => (
+                  <motion.div
+                    key={match.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    onClick={() => setSelectedMatch(match)}
+                    style={{
+                      background: 'white',
+                      borderRadius: '15px',
+                      padding: '20px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '15px',
+                      cursor: 'pointer',
+                      boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
+                      transition: 'transform 0.2s ease'
+                    }}
+                    onMouseOver={(e) => e.target.style.transform = 'translateY(-2px)'}
+                    onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
+                  >
+                    <img
+                      src={match.mainPhoto}
+                      alt={match.name}
+                      style={{
+                        width: '60px',
+                        height: '60px',
+                        borderRadius: '50%',
+                        objectFit: 'cover'
+                      }}
+                    />
+                    <div style={{ flex: 1 }}>
+                      <h3 style={{ margin: '0 0 5px 0', color: '#333' }}>{match.name}</h3>
+                      <p style={{ margin: 0, color: '#666', fontSize: '14px' }}>
+                        {match.phoCompatibility}% pho compatibility
+                      </p>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '5px' }}>
+                        <div style={{
+                          background: '#4CAF50',
+                          color: 'white',
+                          padding: '2px 8px',
+                          borderRadius: '10px',
+                          fontSize: '12px'
+                        }}>
+                          {match.preferences.brothType} lover
+                        </div>
+                      </div>
+                    </div>
+                    <MessageCircle size={24} color="#ff6b6b" />
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </div>
+        ) : (
+          // Chat Interface
         <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
           {/* Chat Header */}
           <div style={{
@@ -382,6 +575,7 @@ const Matches = ({ currentUser }) => {
             </button>
           </div>
         </div>
+        )
       )}
     </div>
   );
