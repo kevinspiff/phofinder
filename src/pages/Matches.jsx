@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, Camera, MapPin, Heart, Send, Utensils, Star } from 'lucide-react';
+import { MessageCircle, Camera, MapPin, Heart, Send, Utensils, Star, Navigation, Clock, Phone } from 'lucide-react';
 import { mockUsers, phoSpots } from '../data/mockData';
 
 const Matches = ({ currentUser }) => {
@@ -131,6 +131,78 @@ const Matches = ({ currentUser }) => {
     setActiveSubTab('chats');
     setSelectedMatch(match);
     suggestPhoDate(match.id);
+  };
+
+  // Get top 3 pho spots by rating
+  const getTopPhoSpots = () => {
+    return phoSpots
+      .sort((a, b) => b.rating - a.rating)
+      .slice(0, 3);
+  };
+
+  // Open map with directions
+  const openMapDirections = (spot) => {
+    const { lat, lng } = spot.coordinates;
+    const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+    window.open(mapUrl, '_blank');
+  };
+
+  // Create a simple map placeholder component
+  const MapPlaceholder = ({ spot }) => {
+    const { lat, lng } = spot.coordinates;
+    return (
+      <div style={{
+        width: '100%',
+        height: '100%',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: 'white',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        {/* Map grid pattern */}
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundImage: `
+            linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
+          `,
+          backgroundSize: '20px 20px'
+        }} />
+        
+        {/* Location marker */}
+        <div style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '12px',
+          height: '12px',
+          background: '#ff4444',
+          borderRadius: '50%',
+          border: '2px solid white',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
+        }} />
+        
+        {/* Coordinates display */}
+        <div style={{
+          position: 'absolute',
+          bottom: '4px',
+          left: '4px',
+          fontSize: '8px',
+          opacity: 0.8
+        }}>
+          {lat.toFixed(3)}, {lng.toFixed(3)}
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -405,6 +477,226 @@ const Matches = ({ currentUser }) => {
             overflowY: 'auto',
             background: '#f8f9fa'
           }}>
+            {/* Top Pho Spots Display */}
+            <div style={{
+              background: 'white',
+              borderRadius: '15px',
+              padding: '20px',
+              marginBottom: '20px',
+              boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
+            }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                marginBottom: '15px'
+              }}>
+                <Utensils size={20} color="#ff6b6b" />
+                <h3 style={{ margin: 0, color: '#333', fontSize: '16px' }}>
+                  Top 3 Pho Spots
+                </h3>
+              </div>
+              
+              <div style={{ display: 'grid', gap: '16px' }}>
+                {getTopPhoSpots().map((spot, index) => (
+                  <motion.div
+                    key={spot.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    style={{
+                      background: '#f8f9fa',
+                      borderRadius: '12px',
+                      overflow: 'hidden',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                      transition: 'transform 0.2s ease'
+                    }}
+                    onMouseOver={(e) => e.target.style.transform = 'translateY(-2px)'}
+                    onMouseOut={(e) => e.target.style.transform = 'translateY(0)'}
+                  >
+                    {/* Header with ranking and basic info */}
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '12px',
+                      padding: '12px',
+                      cursor: 'pointer'
+                    }}
+                    onClick={() => {
+                      const dateSuggestion = {
+                        id: Date.now(),
+                        type: 'date-suggestion',
+                        sender: 'me',
+                        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                        restaurant: spot,
+                        message: `Want to grab pho at ${spot.name}? They have amazing ${spot.specialties[0]}!`
+                      };
+                      setMessages(prev => ({
+                        ...prev,
+                        [selectedMatch.id]: [...(prev[selectedMatch.id] || []), dateSuggestion]
+                      }));
+                    }}>
+                      <div style={{
+                        background: '#ff6b6b',
+                        color: 'white',
+                        width: '28px',
+                        height: '28px',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '14px',
+                        fontWeight: 'bold'
+                      }}>
+                        {index + 1}
+                      </div>
+                      
+                      <img
+                        src={spot.image}
+                        alt={spot.name}
+                        style={{
+                          width: '60px',
+                          height: '60px',
+                          borderRadius: '8px',
+                          objectFit: 'cover'
+                        }}
+                      />
+                      
+                      <div style={{ flex: 1 }}>
+                        <h4 style={{ margin: '0 0 4px 0', color: '#333', fontSize: '16px', fontWeight: '600' }}>
+                          {spot.name}
+                        </h4>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                          <MapPin size={12} color="#666" />
+                          <span style={{ color: '#666', fontSize: '12px' }}>
+                            {spot.distance} away
+                          </span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          <div style={{ display: 'flex', gap: '2px' }}>
+                            {[1, 2, 3, 4, 5].map(star => (
+                              <div
+                                key={star}
+                                style={{
+                                  width: '12px',
+                                  height: '12px',
+                                  background: star <= Math.floor(spot.rating) ? '#ffd700' : '#e0e0e0',
+                                  borderRadius: '50%'
+                                }}
+                              />
+                            ))}
+                          </div>
+                          <span style={{ fontSize: '12px', color: '#666', fontWeight: '500' }}>
+                            {spot.rating}
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div style={{
+                        background: '#4CAF50',
+                        color: 'white',
+                        padding: '6px 12px',
+                        borderRadius: '15px',
+                        fontSize: '11px',
+                        fontWeight: 'bold'
+                      }}>
+                        Suggest
+                      </div>
+                    </div>
+
+                    {/* Map and detailed info */}
+                    <div style={{
+                      display: 'flex',
+                      background: 'white',
+                      borderTop: '1px solid #e0e0e0'
+                    }}>
+                      {/* Map */}
+                      <div style={{
+                        width: '120px',
+                        height: '80px',
+                        position: 'relative',
+                        cursor: 'pointer',
+                        borderRadius: '0 0 0 8px',
+                        overflow: 'hidden'
+                      }}
+                      onClick={() => openMapDirections(spot)}>
+                        <MapPlaceholder spot={spot} />
+                        <div style={{
+                          position: 'absolute',
+                          top: '4px',
+                          right: '4px',
+                          background: 'rgba(0,0,0,0.7)',
+                          color: 'white',
+                          padding: '2px 6px',
+                          borderRadius: '4px',
+                          fontSize: '10px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '2px'
+                        }}>
+                          <Navigation size={8} />
+                          Directions
+                        </div>
+                      </div>
+
+                      {/* Location details */}
+                      <div style={{
+                        flex: 1,
+                        padding: '12px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '6px'
+                      }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <MapPin size={12} color="#666" />
+                          <span style={{ fontSize: '11px', color: '#666' }}>
+                            {spot.address}
+                          </span>
+                        </div>
+                        
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <Clock size={12} color="#666" />
+                          <span style={{ fontSize: '11px', color: '#666' }}>
+                            {spot.hours}
+                          </span>
+                        </div>
+                        
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <Phone size={12} color="#666" />
+                          <span style={{ fontSize: '11px', color: '#666' }}>
+                            {spot.phone}
+                          </span>
+                        </div>
+
+                        <div style={{
+                          display: 'flex',
+                          flexWrap: 'wrap',
+                          gap: '4px',
+                          marginTop: '4px'
+                        }}>
+                          {spot.specialties.slice(0, 2).map((specialty, idx) => (
+                            <span
+                              key={idx}
+                              style={{
+                                background: '#ff6b6b',
+                                color: 'white',
+                                padding: '2px 6px',
+                                borderRadius: '8px',
+                                fontSize: '9px',
+                                fontWeight: '500'
+                              }}
+                            >
+                              {specialty}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
             <AnimatePresence>
               {(messages[selectedMatch.id] || []).map((msg, index) => (
                 <motion.div

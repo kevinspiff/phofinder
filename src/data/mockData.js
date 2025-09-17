@@ -12,33 +12,53 @@ export const phoSpots = [
     id: 1,
     name: "Pho Saigon",
     location: "Little Saigon, San Jose",
+    address: "123 Story Rd, San Jose, CA 95122",
     rating: 4.8,
     specialties: ["Traditional Beef Pho", "Bone Marrow Pho"],
-    image: "https://images.unsplash.com/photo-1551218808-94e220e084d2?w=400&h=300&fit=crop"
+    image: "https://images.unsplash.com/photo-1551218808-94e220e084d2?w=400&h=300&fit=crop",
+    coordinates: { lat: 37.3382, lng: -121.8863 },
+    distance: "2.3 miles",
+    hours: "9:00 AM - 10:00 PM",
+    phone: "(408) 555-0123"
   },
   {
     id: 2,
     name: "Pho 79",
     location: "Westminster, CA",
+    address: "456 Bolsa Ave, Westminster, CA 92683",
     rating: 4.9,
     specialties: ["Rare Beef Pho", "Chicken Pho"],
-    image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop"
+    image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop",
+    coordinates: { lat: 33.7500, lng: -117.9939 },
+    distance: "5.1 miles",
+    hours: "8:00 AM - 11:00 PM",
+    phone: "(714) 555-0456"
   },
   {
     id: 3,
     name: "Pho Hoa",
     location: "San Francisco, CA",
+    address: "789 Clement St, San Francisco, CA 94118",
     rating: 4.6,
     specialties: ["Vegetarian Pho", "Seafood Pho"],
-    image: "https://images.unsplash.com/photo-1574484284002-952d92456975?w=400&h=300&fit=crop"
+    image: "https://images.unsplash.com/photo-1574484284002-952d92456975?w=400&h=300&fit=crop",
+    coordinates: { lat: 37.7849, lng: -122.4634 },
+    distance: "1.8 miles",
+    hours: "10:00 AM - 9:30 PM",
+    phone: "(415) 555-0789"
   },
   {
     id: 4,
     name: "Golden Star Vietnamese",
     location: "Oakland, CA",
+    address: "321 International Blvd, Oakland, CA 94606",
     rating: 4.7,
     specialties: ["Brisket Pho", "Meatball Pho"],
-    image: "https://images.unsplash.com/photo-1551218808-94e220e084d2?w=400&h=300&fit=crop"
+    image: "https://images.unsplash.com/photo-1551218808-94e220e084d2?w=400&h=300&fit=crop",
+    coordinates: { lat: 37.8044, lng: -122.2712 },
+    distance: "3.7 miles",
+    hours: "9:30 AM - 10:30 PM",
+    phone: "(510) 555-0321"
   }
 ];
 
