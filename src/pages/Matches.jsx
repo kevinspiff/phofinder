@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, Camera, MapPin, Heart, Send, Utensils, Star, Navigation, Clock, Phone } from 'lucide-react';
 import { mockUsers, phoSpots } from '../data/mockData';
+import { colors, spacing, typography, borderRadius, shadows, iconSize } from '../design-tokens';
 
 const Matches = ({ currentUser }) => {
   const [selectedMatch, setSelectedMatch] = useState(null);
@@ -207,15 +208,15 @@ const Matches = ({ currentUser }) => {
 
   return (
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <div style={{ background: 'white', padding: '10px 20px', borderBottom: '1px solid #e0e0e0' }}>
+      <div style={{ background: colors.background, padding: `${spacing.xl} ${spacing['5xl']}`, borderBottom: `1px solid ${colors.border}` }}>
         <div style={{ display: 'flex', gap: '10px' }}>
           <button
             onClick={() => { setActiveSubTab('chats'); }}
             style={{
-              background: activeSubTab === 'chats' ? '#ff6b6b' : 'transparent',
-              color: activeSubTab === 'chats' ? 'white' : '#333',
-              border: '1px solid #ff6b6b',
-              borderRadius: '20px',
+              background: activeSubTab === 'chats' ? colors.primary : 'transparent',
+              color: activeSubTab === 'chats' ? colors.textWhite : colors.textPrimary,
+              border: `1px solid ${colors.primary}`,
+              borderRadius: borderRadius['4xl'],
               padding: '8px 14px',
               cursor: 'pointer',
               fontWeight: 600

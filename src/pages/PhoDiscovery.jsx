@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Heart, Star, MapPin, Utensils } from 'lucide-react';
 import { mockUsers } from '../data/mockData';
+import { colors, spacing, typography, borderRadius, shadows, zIndex, iconSize } from '../design-tokens';
 
 const PhoDiscovery = ({ currentUser }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -46,12 +47,12 @@ const PhoDiscovery = ({ currentUser }) => {
         alignItems: 'center',
         justifyContent: 'center',
         height: '60vh',
-        padding: '20px',
+        padding: spacing['5xl'],
         textAlign: 'center'
       }}>
-        <Heart size={64} color="#ff6b6b" style={{ marginBottom: '20px' }} />
-        <h2 style={{ color: '#333', marginBottom: '10px' }}>No more pho lovers nearby!</h2>
-        <p style={{ color: '#666', marginBottom: '20px' }}>
+        <Heart size={iconSize['6xl']} color={colors.primary} style={{ marginBottom: spacing['5xl'] }} />
+        <h2 style={{ color: colors.textPrimary, marginBottom: spacing.xl }}>No more pho lovers nearby!</h2>
+        <p style={{ color: colors.textSecondary, marginBottom: spacing['5xl'] }}>
           Check back later for new pho enthusiasts in your area.
         </p>
         <button 
@@ -68,7 +69,7 @@ const PhoDiscovery = ({ currentUser }) => {
   }
 
   return (
-    <div style={{ padding: '20px', minHeight: '100vh' }}>
+    <div style={{ padding: spacing['5xl'], minHeight: '100vh' }}>
       <AnimatePresence>
         {currentUserProfile && (
           <motion.div
@@ -101,12 +102,12 @@ const PhoDiscovery = ({ currentUser }) => {
               left: 0,
               right: 0,
               bottom: 0,
-              background: 'rgba(0,0,0,0.8)',
+              background: colors.overlay,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              zIndex: 1000,
-              padding: '20px'
+              zIndex: zIndex.overlay,
+              padding: spacing['5xl']
             }}
             onClick={closeMatchModal}
           >
@@ -115,18 +116,18 @@ const PhoDiscovery = ({ currentUser }) => {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.5, opacity: 0 }}
               style={{
-                background: 'white',
-                borderRadius: '20px',
-                padding: '40px',
+                background: colors.background,
+                borderRadius: borderRadius['4xl'],
+                padding: spacing['8xl'],
                 textAlign: 'center',
                 maxWidth: '300px',
                 width: '100%'
               }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div style={{ fontSize: '48px', marginBottom: '20px' }}>🎉</div>
-              <h2 style={{ color: '#ff6b6b', marginBottom: '10px' }}>It's a Match!</h2>
-              <p style={{ color: '#666', marginBottom: '20px' }}>
+              <div style={{ fontSize: '48px', marginBottom: spacing['5xl'] }}>🎉</div>
+              <h2 style={{ color: colors.primary, marginBottom: spacing.xl }}>It's a Match!</h2>
+              <p style={{ color: colors.textSecondary, marginBottom: spacing['5xl'] }}>
                 You and {matchedUser.name} both love pho! Start a conversation and plan your first pho date.
               </p>
               <button className="btn btn-primary" onClick={closeMatchModal}>
@@ -196,10 +197,10 @@ const UserCard = ({ user, onSwipe, currentUser }) => {
       onDrag={handleDrag}
       onDragEnd={handleDragEnd}
       style={{
-        background: 'white',
-        borderRadius: '20px',
+        background: colors.background,
+        borderRadius: borderRadius['4xl'],
         overflow: 'hidden',
-        boxShadow: '0 10px 30px rgba(0,0,0,0.2)',
+        boxShadow: shadows['4xl'],
         cursor: 'grab',
         transform: `rotate(${dragDirection * 5}deg)`,
         transition: 'transform 0.1s ease'
@@ -220,19 +221,19 @@ const UserCard = ({ user, onSwipe, currentUser }) => {
         {/* Compatibility Badge */}
         <div style={{
           position: 'absolute',
-          top: '20px',
-          right: '20px',
-          background: 'rgba(255, 107, 107, 0.9)',
-          color: 'white',
-          padding: '8px 12px',
-          borderRadius: '20px',
-          fontSize: '14px',
-          fontWeight: '600',
+          top: spacing['5xl'],
+          right: spacing['5xl'],
+          background: colors.primaryLight,
+          color: colors.textWhite,
+          padding: `${spacing.lg} ${spacing['2xl']}`,
+          borderRadius: borderRadius['4xl'],
+          fontSize: typography.fontSize.md,
+          fontWeight: typography.fontWeight.semibold,
           display: 'flex',
           alignItems: 'center',
-          gap: '4px'
+          gap: spacing.xs
         }}>
-          <Star size={16} fill="white" />
+          <Star size={iconSize['4xl']} fill={colors.textWhite} />
           {compatibility}% Match
         </div>
 
@@ -240,57 +241,57 @@ const UserCard = ({ user, onSwipe, currentUser }) => {
         <div style={{
           position: 'absolute',
           top: '50%',
-          left: '20px',
+          left: spacing['5xl'],
           transform: 'translateY(-50%)',
-          background: 'rgba(255, 107, 107, 0.9)',
-          color: 'white',
-          padding: '10px',
-          borderRadius: '50%',
+          background: colors.primaryLight,
+          color: colors.textWhite,
+          padding: spacing.xl,
+          borderRadius: borderRadius.full,
           opacity: dragDirection === 1 ? 1 : 0,
           transition: 'opacity 0.2s ease'
         }}>
-          <Heart size={24} fill="white" />
+          <Heart size={iconSize['2xl']} fill={colors.textWhite} />
         </div>
         
         <div style={{
           position: 'absolute',
           top: '50%',
-          right: '20px',
+          right: spacing['5xl'],
           transform: 'translateY(-50%)',
           background: 'rgba(255, 0, 0, 0.9)',
-          color: 'white',
-          padding: '10px',
-          borderRadius: '50%',
+          color: colors.textWhite,
+          padding: spacing.xl,
+          borderRadius: borderRadius.full,
           opacity: dragDirection === -1 ? 1 : 0,
           transition: 'opacity 0.2s ease'
         }}>
-          <X size={24} />
+          <X size={iconSize['2xl']} />
         </div>
       </div>
 
       {/* User Info */}
-      <div style={{ padding: '20px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-          <h2 style={{ margin: 0, fontSize: '24px', color: '#333' }}>
+      <div style={{ padding: spacing['5xl'] }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: spacing.xl }}>
+          <h2 style={{ margin: 0, fontSize: typography.fontSize['2xl'], color: colors.textPrimary }}>
             {user.name}, {user.age}
           </h2>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#666' }}>
-            <MapPin size={16} />
-            <span style={{ fontSize: '14px' }}>{user.distance}</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: spacing.xs, color: colors.textSecondary }}>
+            <MapPin size={iconSize['4xl']} />
+            <span style={{ fontSize: typography.fontSize.md }}>{user.distance}</span>
           </div>
         </div>
         
-        <p style={{ color: '#666', marginBottom: '20px', lineHeight: '1.5' }}>
+        <p style={{ color: colors.textSecondary, marginBottom: spacing['5xl'], lineHeight: typography.lineHeight.normal }}>
           {user.bio}
         </p>
 
         {/* Pho Journey Preview */}
-        <div style={{ marginBottom: '20px' }}>
-          <h3 style={{ fontSize: '16px', color: '#333', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Utensils size={18} color="#ff6b6b" />
+        <div style={{ marginBottom: spacing['5xl'] }}>
+          <h3 style={{ fontSize: typography.fontSize['4xl'], color: colors.textPrimary, marginBottom: spacing.xl, display: 'flex', alignItems: 'center', gap: spacing.lg }}>
+            <Utensils size={iconSize.lg} color={colors.primary} />
             My Pho Journey
           </h3>
-          <div style={{ display: 'flex', gap: '10px', overflowX: 'auto', paddingBottom: '10px' }}>
+          <div style={{ display: 'flex', gap: spacing.xl, overflowX: 'auto', paddingBottom: spacing.xl }}>
             {user.phoJourney.slice(0, 3).map((pho, index) => (
               <div key={pho.id} style={{ minWidth: '120px', textAlign: 'center' }}>
                 <img
@@ -300,14 +301,14 @@ const UserCard = ({ user, onSwipe, currentUser }) => {
                     width: '120px',
                     height: '80px',
                     objectFit: 'cover',
-                    borderRadius: '8px',
-                    marginBottom: '5px'
+                    borderRadius: borderRadius.md,
+                    marginBottom: spacing.sm
                   }}
                 />
-                <div style={{ fontSize: '12px', color: '#666' }}>
-                  <div style={{ fontWeight: '600' }}>{pho.restaurant}</div>
+                <div style={{ fontSize: typography.fontSize.sm, color: colors.textSecondary }}>
+                  <div style={{ fontWeight: typography.fontWeight.semibold }}>{pho.restaurant}</div>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
-                    <Star size={12} fill="#ffd700" color="#ffd700" />
+                    <Star size={iconSize.sm} fill={colors.star} color={colors.star} />
                     <span>{pho.rating}</span>
                   </div>
                 </div>
@@ -317,34 +318,34 @@ const UserCard = ({ user, onSwipe, currentUser }) => {
         </div>
 
         {/* Preferences */}
-        <div style={{ marginBottom: '20px' }}>
-          <h4 style={{ fontSize: '14px', color: '#333', marginBottom: '8px' }}>Pho Preferences</h4>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+        <div style={{ marginBottom: spacing['5xl'] }}>
+          <h4 style={{ fontSize: typography.fontSize.md, color: colors.textPrimary, marginBottom: spacing.lg }}>Pho Preferences</h4>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: spacing.md }}>
             <span style={{
-              background: '#ff6b6b',
-              color: 'white',
-              padding: '4px 8px',
-              borderRadius: '12px',
-              fontSize: '12px'
+              background: colors.primary,
+              color: colors.textWhite,
+              padding: `${spacing.xs} ${spacing.lg}`,
+              borderRadius: borderRadius.lg,
+              fontSize: typography.fontSize.sm
             }}>
               {user.preferences.brothType} Broth
             </span>
             <span style={{
-              background: '#ff8e53',
-              color: 'white',
-              padding: '4px 8px',
-              borderRadius: '12px',
-              fontSize: '12px'
+              background: colors.primaryGradientEnd,
+              color: colors.textWhite,
+              padding: `${spacing.xs} ${spacing.lg}`,
+              borderRadius: borderRadius.lg,
+              fontSize: typography.fontSize.sm
             }}>
               {user.preferences.noodleType} Noodles
             </span>
             {user.preferences.proteins.slice(0, 2).map(protein => (
               <span key={protein} style={{
-                background: '#e0e0e0',
-                color: '#666',
-                padding: '4px 8px',
-                borderRadius: '12px',
-                fontSize: '12px'
+                background: colors.border,
+                color: colors.textSecondary,
+                padding: `${spacing.xs} ${spacing.lg}`,
+                borderRadius: borderRadius.lg,
+                fontSize: typography.fontSize.sm
               }}>
                 {protein}
               </span>
@@ -353,57 +354,57 @@ const UserCard = ({ user, onSwipe, currentUser }) => {
         </div>
 
         {/* Action Buttons */}
-        <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', gap: spacing['3xl'], justifyContent: 'center' }}>
           <button
             onClick={() => onSwipe('left', user.id)}
             style={{
-              background: 'white',
-              border: '3px solid #ff6b6b',
-              borderRadius: '50%',
+              background: colors.background,
+              border: `3px solid ${colors.primary}`,
+              borderRadius: borderRadius.full,
               width: '60px',
               height: '60px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              transition: 'all 0.2s ease'
+              transition: transitions.all
             }}
             onMouseOver={(e) => {
-              e.target.style.background = '#ff6b6b';
-              e.target.style.color = 'white';
+              e.target.style.background = colors.primary;
+              e.target.style.color = colors.textWhite;
             }}
             onMouseOut={(e) => {
-              e.target.style.background = 'white';
-              e.target.style.color = '#ff6b6b';
+              e.target.style.background = colors.background;
+              e.target.style.color = colors.primary;
             }}
           >
-            <X size={24} color="#ff6b6b" />
+            <X size={iconSize['2xl']} color={colors.primary} />
           </button>
           
           <button
             onClick={() => onSwipe('right', user.id)}
             style={{
-              background: 'white',
-              border: '3px solid #4CAF50',
-              borderRadius: '50%',
+              background: colors.background,
+              border: `3px solid ${colors.secondary}`,
+              borderRadius: borderRadius.full,
               width: '60px',
               height: '60px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              transition: 'all 0.2s ease'
+              transition: transitions.all
             }}
             onMouseOver={(e) => {
-              e.target.style.background = '#4CAF50';
-              e.target.style.color = 'white';
+              e.target.style.background = colors.secondary;
+              e.target.style.color = colors.textWhite;
             }}
             onMouseOut={(e) => {
-              e.target.style.background = 'white';
-              e.target.style.color = '#4CAF50';
+              e.target.style.background = colors.background;
+              e.target.style.color = colors.secondary;
             }}
           >
-            <Heart size={24} color="#4CAF50" />
+            <Heart size={iconSize['2xl']} color={colors.secondary} />
           </button>
         </div>
       </div>

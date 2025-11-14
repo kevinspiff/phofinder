@@ -1,39 +1,40 @@
 import React from 'react';
 import { Heart, MapPin } from 'lucide-react';
+import { colors, spacing, typography, shadows, zIndex, iconSize } from '../design-tokens';
 
 const Header = ({ currentUser }) => {
   return (
     <header style={{
-      background: 'linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%)',
-      color: 'white',
-      padding: '20px',
+      background: colors.backgroundGradient,
+      color: colors.textWhite,
+      padding: spacing['5xl'],
       textAlign: 'center',
       position: 'sticky',
       top: 0,
-      zIndex: 100,
-      boxShadow: '0 4px 20px rgba(0,0,0,0.1)'
+      zIndex: zIndex.sticky,
+      boxShadow: shadows['2xl']
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
-        <Heart size={28} fill="white" />
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: spacing.xl }}>
+        <Heart size={iconSize['3xl']} fill={colors.textWhite} />
         <h1 style={{ 
-          fontSize: '24px', 
-          fontWeight: 'bold',
+          fontSize: typography.fontSize['2xl'], 
+          fontWeight: typography.fontWeight.bold,
           margin: 0,
-          textShadow: '0 2px 4px rgba(0,0,0,0.2)'
+          textShadow: shadows.text
         }}>
           Pho Mate
         </h1>
       </div>
       <p style={{ 
-        margin: '8px 0 0 0', 
-        fontSize: '14px', 
+        margin: `${spacing.lg} 0 0 0`, 
+        fontSize: typography.fontSize.md, 
         opacity: 0.9,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: '5px'
+        gap: spacing.sm
       }}>
-        <MapPin size={16} />
+        <MapPin size={iconSize['4xl']} />
         Find love over a shared bowl of pho
       </p>
     </header>

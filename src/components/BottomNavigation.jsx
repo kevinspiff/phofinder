@@ -1,5 +1,6 @@
 import React from 'react';
 import { Heart, MessageCircle, User, BookOpen, MapPin } from 'lucide-react';
+import { colors, spacing, typography, borderRadius, transitions, zIndex, iconSize } from '../design-tokens';
 
 const BottomNavigation = ({ activeTab, setActiveTab }) => {
   const navItems = [
@@ -16,39 +17,45 @@ const BottomNavigation = ({ activeTab, setActiveTab }) => {
       bottom: 0,
       left: 0,
       right: 0,
-      background: 'white',
-      borderTop: '1px solid #e0e0e0',
+      background: colors.background,
+      borderTop: `1px solid ${colors.border}`,
       display: 'flex',
       justifyContent: 'space-around',
-      padding: '10px 0',
-      zIndex: 100,
-      boxShadow: '0 -4px 20px rgba(0,0,0,0.1)'
+      padding: `${spacing.xl} 0`,
+      zIndex: zIndex.sticky,
+      boxShadow: `0 -4px ${spacing['5xl']} ${colors.overlayLight}`
     }}>
-      {navItems.map(({ id, icon: Icon, label }) => (
-        <button
-          key={id}
-          onClick={() => setActiveTab(id)}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '4px',
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            padding: '8px',
-            borderRadius: '8px',
-            transition: 'all 0.2s ease',
-            color: activeTab === id ? '#ff6b6b' : '#666',
-            transform: activeTab === id ? 'scale(1.05)' : 'scale(1)'
-          }}
-        >
-          <Icon size={24} fill={activeTab === id ? '#ff6b6b' : 'none'} />
-          <span style={{ fontSize: '12px', fontWeight: activeTab === id ? '600' : '400' }}>
-            {label}
-          </span>
-        </button>
-      ))}
+      {navItems.map(({ id, icon: Icon, label }) => {
+        const isActive = activeTab === id;
+        return (
+          <button
+            key={id}
+            onClick={() => setActiveTab(id)}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: spacing.xs,
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              padding: spacing.lg,
+              borderRadius: borderRadius.md,
+              transition: transitions.all,
+              color: isActive ? colors.primary : colors.textSecondary,
+              transform: isActive ? 'scale(1.05)' : 'scale(1)'
+            }}
+          >
+            <Icon size={iconSize['2xl']} fill={isActive ? colors.primary : 'none'} />
+            <span style={{ 
+              fontSize: typography.fontSize.sm, 
+              fontWeight: isActive ? typography.fontWeight.semibold : typography.fontWeight.regular 
+            }}>
+              {label}
+            </span>
+          </button>
+        );
+      })}
     </nav>
   );
 };

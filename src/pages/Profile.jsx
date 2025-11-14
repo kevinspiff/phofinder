@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Star, Plus, Edit3, MapPin, Utensils, Heart } from 'lucide-react';
 import { phoPreferences } from '../data/mockData';
+import { colors, spacing, typography, borderRadius, shadows, iconSize } from '../design-tokens';
 
 const Profile = ({ currentUser }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -66,13 +67,13 @@ const Profile = ({ currentUser }) => {
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
+    <div style={{ padding: spacing['5xl'], maxWidth: '600px', margin: '0 auto' }}>
       {/* Profile Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="card"
-        style={{ padding: '30px', textAlign: 'center', marginBottom: '20px' }}
+        style={{ padding: spacing['8xl'], textAlign: 'center', marginBottom: spacing['5xl'] }}
       >
         <div style={{ position: 'relative', display: 'inline-block' }}>
           <img
@@ -81,9 +82,9 @@ const Profile = ({ currentUser }) => {
             style={{
               width: '120px',
               height: '120px',
-              borderRadius: '50%',
+              borderRadius: borderRadius.full,
               objectFit: 'cover',
-              border: '4px solid #ff6b6b'
+              border: `4px solid ${colors.primary}`
             }}
           />
           {isEditing && (
@@ -92,8 +93,8 @@ const Profile = ({ currentUser }) => {
                 position: 'absolute',
                 bottom: '0',
                 right: '0',
-                background: '#ff6b6b',
-                color: 'white',
+                background: colors.primary,
+                color: colors.textWhite,
                 border: 'none',
                 borderRadius: '50%',
                 width: '36px',
@@ -110,7 +111,7 @@ const Profile = ({ currentUser }) => {
           )}
         </div>
         
-        <h1 style={{ margin: '20px 0 10px 0', fontSize: '28px', color: '#333' }}>
+        <h1 style={{ margin: `${spacing['5xl']} 0 ${spacing.xl} 0`, fontSize: typography.fontSize['3xl'], color: colors.textPrimary }}>
           {isEditing ? (
             <input
               type="text"
@@ -124,7 +125,7 @@ const Profile = ({ currentUser }) => {
           )}
         </h1>
         
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', color: '#666', marginBottom: '20px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: spacing.lg, color: colors.textSecondary, marginBottom: spacing['5xl'] }}>
           <MapPin size={16} />
           <span>{editedProfile.location}</span>
         </div>
@@ -139,7 +140,7 @@ const Profile = ({ currentUser }) => {
               placeholder="Tell us about yourself and your pho journey..."
             />
           ) : (
-            <p style={{ color: '#666', lineHeight: '1.6' }}>{editedProfile.bio}</p>
+            <p style={{ color: colors.textSecondary, lineHeight: typography.lineHeight.relaxed }}>{editedProfile.bio}</p>
           )}
         </div>
 
@@ -167,19 +168,19 @@ const Profile = ({ currentUser }) => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
         className="card"
-        style={{ padding: '25px', marginBottom: '20px' }}
+        style={{ padding: spacing['7xl'], marginBottom: spacing['5xl'] }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
-          <h2 style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#333' }}>
-            <Utensils color="#ff6b6b" />
+          <h2 style={{ display: 'flex', alignItems: 'center', gap: spacing.xl, color: colors.textPrimary }}>
+            <Utensils color={colors.primary} />
             My Pho Journey
           </h2>
           {isEditing && (
             <button
               onClick={addPhoJourneyEntry}
               style={{
-                background: '#ff6b6b',
-                color: 'white',
+                background: colors.primary,
+                color: colors.textWhite,
                 border: 'none',
                 borderRadius: '50%',
                 width: '40px',
@@ -203,9 +204,9 @@ const Profile = ({ currentUser }) => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 }}
               style={{
-                border: '1px solid #e0e0e0',
-                borderRadius: '12px',
-                padding: '15px',
+                border: `1px solid ${colors.border}`,
+                borderRadius: borderRadius.lg,
+                padding: spacing['3xl'],
                 position: 'relative'
               }}
             >
@@ -216,8 +217,8 @@ const Profile = ({ currentUser }) => {
                     position: 'absolute',
                     top: '10px',
                     right: '10px',
-                    background: '#ff4444',
-                    color: 'white',
+                    background: colors.error,
+                    color: colors.textWhite,
                     border: 'none',
                     borderRadius: '50%',
                     width: '24px',
@@ -241,29 +242,29 @@ const Profile = ({ currentUser }) => {
                     width: '100px',
                     height: '80px',
                     objectFit: 'cover',
-                    borderRadius: '8px'
+                    borderRadius: borderRadius.md
                   }}
                 />
                 <div style={{ flex: 1 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: spacing.xl, marginBottom: spacing.lg }}>
                     {isEditing ? (
                       <input
                         type="text"
                         value={pho.restaurant}
                         onChange={(e) => updatePhoJourneyEntry(pho.id, 'restaurant', e.target.value)}
                         className="input"
-                        style={{ fontSize: '16px', fontWeight: '600', padding: '4px 8px' }}
+                        style={{ fontSize: typography.fontSize['4xl'], fontWeight: typography.fontWeight.semibold, padding: `${spacing.xs} ${spacing.lg}` }}
                       />
                     ) : (
-                      <h3 style={{ margin: 0, fontSize: '16px', color: '#333' }}>{pho.restaurant}</h3>
+                      <h3 style={{ margin: 0, fontSize: typography.fontSize['4xl'], color: colors.textPrimary }}>{pho.restaurant}</h3>
                     )}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
                       {[1, 2, 3, 4, 5].map((star) => (
                         <Star
                           key={star}
-                          size={16}
-                          fill={star <= pho.rating ? '#ffd700' : '#e0e0e0'}
-                          color={star <= pho.rating ? '#ffd700' : '#e0e0e0'}
+                          size={iconSize['4xl']}
+                          fill={star <= pho.rating ? colors.star : colors.border}
+                          color={star <= pho.rating ? colors.star : colors.border}
                           style={{ cursor: isEditing ? 'pointer' : 'default' }}
                           onClick={() => isEditing && updatePhoJourneyEntry(pho.id, 'rating', star)}
                         />
@@ -279,7 +280,7 @@ const Profile = ({ currentUser }) => {
                       style={{ fontSize: '14px', padding: '8px' }}
                     />
                   ) : (
-                    <p style={{ color: '#666', fontSize: '14px', lineHeight: '1.4' }}>{pho.description}</p>
+                    <p style={{ color: colors.textSecondary, fontSize: typography.fontSize.md, lineHeight: typography.lineHeight.tight }}>{pho.description}</p>
                   )}
                 </div>
               </div>
@@ -296,15 +297,15 @@ const Profile = ({ currentUser }) => {
         className="card"
         style={{ padding: '25px' }}
       >
-        <h2 style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#333', marginBottom: '20px' }}>
-          <Heart color="#ff6b6b" />
+        <h2 style={{ display: 'flex', alignItems: 'center', gap: spacing.xl, color: colors.textPrimary, marginBottom: spacing['5xl'] }}>
+          <Heart color={colors.primary} />
           Pho Preferences
         </h2>
 
         <div style={{ display: 'grid', gap: '20px' }}>
           {/* Broth Type */}
           <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: '#333' }}>
+            <label style={{ display: 'block', marginBottom: spacing.lg, fontWeight: typography.fontWeight.semibold, color: colors.textPrimary }}>
               Broth Type
             </label>
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
@@ -315,10 +316,10 @@ const Profile = ({ currentUser }) => {
                   style={{
                     padding: '8px 16px',
                     border: '2px solid',
-                    borderRadius: '20px',
-                    background: editedProfile.preferences.brothType === type ? '#ff6b6b' : 'white',
-                    color: editedProfile.preferences.brothType === type ? 'white' : '#ff6b6b',
-                    borderColor: '#ff6b6b',
+                    borderRadius: borderRadius['4xl'],
+                    background: editedProfile.preferences.brothType === type ? colors.primary : colors.background,
+                    color: editedProfile.preferences.brothType === type ? colors.textWhite : colors.primary,
+                    borderColor: colors.primary,
                     cursor: isEditing ? 'pointer' : 'default',
                     transition: 'all 0.2s ease'
                   }}
@@ -331,7 +332,7 @@ const Profile = ({ currentUser }) => {
 
           {/* Noodle Type */}
           <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: '#333' }}>
+            <label style={{ display: 'block', marginBottom: spacing.lg, fontWeight: typography.fontWeight.semibold, color: colors.textPrimary }}>
               Noodle Type
             </label>
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
@@ -342,10 +343,10 @@ const Profile = ({ currentUser }) => {
                   style={{
                     padding: '8px 16px',
                     border: '2px solid',
-                    borderRadius: '20px',
-                    background: editedProfile.preferences.noodleType === type ? '#ff8e53' : 'white',
-                    color: editedProfile.preferences.noodleType === type ? 'white' : '#ff8e53',
-                    borderColor: '#ff8e53',
+                    borderRadius: borderRadius['4xl'],
+                    background: editedProfile.preferences.noodleType === type ? colors.primaryGradientEnd : colors.background,
+                    color: editedProfile.preferences.noodleType === type ? colors.textWhite : colors.primaryGradientEnd,
+                    borderColor: colors.primaryGradientEnd,
                     cursor: isEditing ? 'pointer' : 'default',
                     transition: 'all 0.2s ease'
                   }}
@@ -358,7 +359,7 @@ const Profile = ({ currentUser }) => {
 
           {/* Proteins */}
           <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: '#333' }}>
+            <label style={{ display: 'block', marginBottom: spacing.lg, fontWeight: typography.fontWeight.semibold, color: colors.textPrimary }}>
               Protein Preferences
             </label>
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
@@ -369,10 +370,10 @@ const Profile = ({ currentUser }) => {
                   style={{
                     padding: '6px 12px',
                     border: '2px solid',
-                    borderRadius: '16px',
-                    background: editedProfile.preferences.proteins.includes(protein) ? '#4CAF50' : 'white',
-                    color: editedProfile.preferences.proteins.includes(protein) ? 'white' : '#4CAF50',
-                    borderColor: '#4CAF50',
+                    borderRadius: borderRadius['2xl'],
+                    background: editedProfile.preferences.proteins.includes(protein) ? colors.secondary : colors.background,
+                    color: editedProfile.preferences.proteins.includes(protein) ? colors.textWhite : colors.secondary,
+                    borderColor: colors.secondary,
                     cursor: isEditing ? 'pointer' : 'default',
                     transition: 'all 0.2s ease',
                     fontSize: '14px'
@@ -386,7 +387,7 @@ const Profile = ({ currentUser }) => {
 
           {/* Garnishes */}
           <div>
-            <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600', color: '#333' }}>
+            <label style={{ display: 'block', marginBottom: spacing.lg, fontWeight: typography.fontWeight.semibold, color: colors.textPrimary }}>
               Garnish Preferences
             </label>
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
@@ -397,10 +398,10 @@ const Profile = ({ currentUser }) => {
                   style={{
                     padding: '6px 12px',
                     border: '2px solid',
-                    borderRadius: '16px',
-                    background: editedProfile.preferences.garnishes.includes(garnish) ? '#9C27B0' : 'white',
-                    color: editedProfile.preferences.garnishes.includes(garnish) ? 'white' : '#9C27B0',
-                    borderColor: '#9C27B0',
+                    borderRadius: borderRadius['2xl'],
+                    background: editedProfile.preferences.garnishes.includes(garnish) ? colors.accent : colors.background,
+                    color: editedProfile.preferences.garnishes.includes(garnish) ? colors.textWhite : colors.accent,
+                    borderColor: colors.accent,
                     cursor: isEditing ? 'pointer' : 'default',
                     transition: 'all 0.2s ease',
                     fontSize: '14px'

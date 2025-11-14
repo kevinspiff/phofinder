@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Star, Navigation, Phone, Clock, Heart, Filter } from 'lucide-react';
 import { phoSpots } from '../data/mockData';
+import { colors, spacing, typography, borderRadius, shadows, iconSize } from '../design-tokens';
 
 const TopSpots = () => {
   const [selectedFilter, setSelectedFilter] = useState('all');
@@ -65,7 +66,7 @@ const TopSpots = () => {
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
+    <div style={{ padding: spacing['5xl'], maxWidth: '600px', margin: '0 auto' }}>
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -73,10 +74,10 @@ const TopSpots = () => {
         style={{ textAlign: 'center', marginBottom: '30px' }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginBottom: '10px' }}>
-          <MapPin size={32} color="#ff6b6b" />
-          <h1 style={{ margin: 0, color: '#333' }}>Top Pho Spots</h1>
+          <MapPin size={iconSize['4xl']} color={colors.primary} />
+          <h1 style={{ margin: 0, color: colors.textPrimary }}>Top Pho Spots</h1>
         </div>
-        <p style={{ color: '#666', fontSize: '16px' }}>
+        <p style={{ color: colors.textSecondary, fontSize: typography.fontSize['4xl'] }}>
           Discover the best pho restaurants in your area
         </p>
       </motion.div>
@@ -101,10 +102,10 @@ const TopSpots = () => {
             style={{
               padding: '8px 16px',
               border: '2px solid',
-              borderRadius: '20px',
-              background: selectedFilter === filter.id ? '#ff6b6b' : 'white',
-              color: selectedFilter === filter.id ? 'white' : '#ff6b6b',
-              borderColor: '#ff6b6b',
+              borderRadius: borderRadius['4xl'],
+              background: selectedFilter === filter.id ? colors.primary : colors.background,
+              color: selectedFilter === filter.id ? colors.textWhite : colors.primary,
+              borderColor: colors.primary,
               cursor: 'pointer',
               transition: 'all 0.2s ease',
               whiteSpace: 'nowrap',
@@ -175,10 +176,10 @@ const TopSpots = () => {
                 position: 'absolute',
                 bottom: '15px',
                 left: '15px',
-                background: 'rgba(255, 107, 107, 0.9)',
-                color: 'white',
-                padding: '6px 12px',
-                borderRadius: '15px',
+                background: colors.primaryLight,
+                color: colors.textWhite,
+                padding: `${spacing.md} ${spacing['2xl']}`,
+                borderRadius: borderRadius.xl,
                 display: 'flex',
                 alignItems: 'center',
                 gap: '4px',
@@ -195,8 +196,8 @@ const TopSpots = () => {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px' }}>
                 <h3 style={{ margin: 0, fontSize: '20px', color: '#333' }}>{spot.name}</h3>
                 <span style={{
-                  background: '#4CAF50',
-                  color: 'white',
+                  background: colors.secondary,
+                  color: colors.textWhite,
                   padding: '4px 8px',
                   borderRadius: '12px',
                   fontSize: '12px',
@@ -250,10 +251,10 @@ const TopSpots = () => {
                 <button
                   style={{
                     flex: 1,
-                    background: '#ff6b6b',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '25px',
+                  background: colors.primary,
+                  color: colors.textWhite,
+                  border: 'none',
+                  borderRadius: borderRadius['5xl'],
                     padding: '12px',
                     fontSize: '14px',
                     fontWeight: '600',
@@ -274,10 +275,10 @@ const TopSpots = () => {
                 <button
                   style={{
                     flex: 1,
-                    background: 'white',
-                    color: '#ff6b6b',
-                    border: '2px solid #ff6b6b',
-                    borderRadius: '25px',
+                    background: colors.background,
+                    color: colors.primary,
+                    border: `2px solid ${colors.primary}`,
+                    borderRadius: borderRadius['5xl'],
                     padding: '12px',
                     fontSize: '14px',
                     fontWeight: '600',

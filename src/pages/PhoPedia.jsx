@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { BookOpen, Star, Utensils, Leaf, Droplets, Zap } from 'lucide-react';
 import { phoPedia } from '../data/mockData';
+import { colors, spacing, typography, borderRadius, shadows, iconSize } from '../design-tokens';
 
 const PhoPedia = () => {
   const [selectedCategory, setSelectedCategory] = useState('basics');
@@ -146,9 +147,9 @@ const PhoPedia = () => {
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '15px' }}>
                   <div style={{ fontSize: '32px' }}>{item.icon}</div>
-                  <h3 style={{ margin: 0, color: '#333' }}>{item.title}</h3>
+                  <h3 style={{ margin: 0, color: colors.textPrimary }}>{item.title}</h3>
                 </div>
-                <p style={{ color: '#666', lineHeight: '1.6' }}>{item.content}</p>
+                <p style={{ color: colors.textSecondary, lineHeight: typography.lineHeight.relaxed }}>{item.content}</p>
               </motion.div>
             ))}
           </div>
@@ -180,10 +181,10 @@ const PhoPedia = () => {
                       <span
                         key={i}
                         style={{
-                          background: '#ff6b6b',
-                          color: 'white',
-                          padding: '6px 12px',
-                          borderRadius: '16px',
+                          background: colors.primary,
+                          color: colors.textWhite,
+                          padding: `${spacing.md} ${spacing['2xl']}`,
+                          borderRadius: borderRadius['2xl'],
                           fontSize: '14px'
                         }}
                       >
@@ -276,13 +277,13 @@ const PhoPedia = () => {
                   {item.description}
                 </p>
                 <div style={{
-                  background: '#f8f9fa',
-                  padding: '15px',
-                  borderRadius: '8px',
-                  borderLeft: '4px solid #ff6b6b'
+                  background: colors.backgroundSecondary,
+                  padding: spacing['3xl'],
+                  borderRadius: borderRadius.md,
+                  borderLeft: `4px solid ${colors.primary}`
                 }}>
-                  <strong style={{ color: '#ff6b6b' }}>Pro Tip:</strong>
-                  <p style={{ margin: '5px 0 0 0', color: '#666' }}>{item.tip}</p>
+                  <strong style={{ color: colors.primary }}>Pro Tip:</strong>
+                  <p style={{ margin: `${spacing.sm} 0 0 0`, color: colors.textSecondary }}>{item.tip}</p>
                 </div>
               </motion.div>
             ))}
@@ -295,7 +296,7 @@ const PhoPedia = () => {
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
+    <div style={{ padding: spacing['5xl'], maxWidth: '800px', margin: '0 auto' }}>
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -303,10 +304,10 @@ const PhoPedia = () => {
         style={{ textAlign: 'center', marginBottom: '30px' }}
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginBottom: '10px' }}>
-          <BookOpen size={32} color="#ff6b6b" />
-          <h1 style={{ margin: 0, color: '#333' }}>Pho-pedia</h1>
+          <BookOpen size={iconSize['4xl']} color={colors.primary} />
+          <h1 style={{ margin: 0, color: colors.textPrimary }}>Pho-pedia</h1>
         </div>
-        <p style={{ color: '#666', fontSize: '16px' }}>
+        <p style={{ color: colors.textSecondary, fontSize: typography.fontSize['4xl'] }}>
           Everything you need to know about pho, from basics to expert tips
         </p>
       </motion.div>
@@ -336,10 +337,10 @@ const PhoPedia = () => {
                 gap: '8px',
                 padding: '12px 16px',
                 border: '2px solid',
-                borderRadius: '25px',
-                background: selectedCategory === category.id ? '#ff6b6b' : 'white',
-                color: selectedCategory === category.id ? 'white' : '#ff6b6b',
-                borderColor: '#ff6b6b',
+                borderRadius: borderRadius['5xl'],
+                background: selectedCategory === category.id ? colors.primary : colors.background,
+                color: selectedCategory === category.id ? colors.textWhite : colors.primary,
+                borderColor: colors.primary,
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
                 whiteSpace: 'nowrap',
